@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chicken Tracker</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Chicken Tracker</h1>
+<p>Version 1</p>
+<label>Date <input type="date" id="d"></label><br>
+<label>Eggs Collected <input type="number" id="e" min="0"></label>
+<button onclick="save()">Save</button>
+<button onclick="exportCSV()">Export CSV</button>
+<table id="t"><tr><th>Date</th><th>Eggs</th></tr></table>
+<script src="script.js"></script>
+</body>
+</html>
