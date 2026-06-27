@@ -1,10 +1,10 @@
 {
-  "name": "Chicken Tracker",
-  "short_name": "Chicken Tracker",
+  "name": "CoopLedger",
+  "short_name": "CoopLedger",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f7efe6",
-  "theme_color": "#6f4e37",
+  "background_color": "#fffaf4",
+  "theme_color": "#5b3a29",
   "icons": [
     {
       "src": "icon.svg",

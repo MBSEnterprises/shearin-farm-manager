@@ -1,134 +1,17 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Chicken Tracker</title>
-  <meta name="theme-color" content="#6f4e37" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <header class="app-header">
-    <div>
-      <h1>Chicken Tracker</h1>
-      <p id="todayLine">Your flock dashboard</p>
-    </div>
-    <button id="installBtn" class="ghost hidden">Install</button>
-  </header>
-
-  <main>
-    <section class="cards">
-      <article class="card"><span>Eggs Today</span><strong id="eggsToday">0</strong></article>
-      <article class="card"><span>7-Day Eggs</span><strong id="eggs7">0</strong></article>
-      <article class="card"><span>Active Hens</span><strong id="activeHens">0</strong></article>
-      <article class="card"><span>Sales This Month</span><strong id="salesMonth">$0.00</strong></article>
-    </section>
-
-    <nav class="tabs" aria-label="Main sections">
-      <button data-tab="eggs" class="active">Eggs</button>
-      <button data-tab="flock">Flock</button>
-      <button data-tab="sales">Sales</button>
-      <button data-tab="use">Use</button>
-      <button data-tab="expenses">Costs</button>
-      <button data-tab="reports">Export</button>
-    </nav>
-
-    <section id="eggs" class="panel active">
-      <h2>Daily Egg Collection</h2>
-      <form id="eggForm" class="form-grid">
-        <label>Date <input type="date" id="eggDate" required /></label>
-        <label>Eggs collected <input type="number" id="eggCount" min="0" step="1" required /></label>
-        <label>Broken / discarded <input type="number" id="eggBad" min="0" step="1" value="0" /></label>
-        <label>Notes <input type="text" id="eggNotes" placeholder="Weather, odd eggs, etc." /></label>
-        <button type="submit">Save Egg Entry</button>
-      </form>
-      <div class="table-wrap"><table id="eggTable"></table></div>
-    </section>
-
-    <section id="flock" class="panel">
-      <h2>Flock</h2>
-      <form id="birdForm" class="form-grid">
-        <label>Name / ID <input type="text" id="birdName" placeholder="Barred Rock #1" required /></label>
-        <label>Breed <input type="text" id="birdBreed" placeholder="Barred Rock" /></label>
-        <label>Status
-          <select id="birdStatus">
-            <option>Active layer</option>
-            <option>Too young</option>
-            <option>Broody</option>
-            <option>Retired</option>
-            <option>Removed</option>
-          </select>
-        </label>
-        <label>Hatch / acquired date <input type="date" id="birdDate" /></label>
-        <label>Notes <input type="text" id="birdNotes" /></label>
-        <button type="submit">Add Bird</button>
-      </form>
-      <div class="table-wrap"><table id="birdTable"></table></div>
-    </section>
-
-    <section id="sales" class="panel">
-      <h2>Egg Sales</h2>
-      <form id="saleForm" class="form-grid">
-        <label>Date <input type="date" id="saleDate" required /></label>
-        <label>Customer <input type="text" id="saleCustomer" placeholder="Name" /></label>
-        <label>Dozens sold <input type="number" id="saleDozens" min="0" step="0.5" required /></label>
-        <label>Price per dozen <input type="number" id="salePrice" min="0" step="0.01" value="5.00" /></label>
-        <label>Paid?
-          <select id="salePaid"><option>Yes</option><option>No</option></select>
-        </label>
-        <label>Notes <input type="text" id="saleNotes" /></label>
-        <button type="submit">Save Sale</button>
-      </form>
-      <div class="table-wrap"><table id="saleTable"></table></div>
-    </section>
-
-    <section id="use" class="panel">
-      <h2>Household Egg Use</h2>
-      <form id="useForm" class="form-grid">
-        <label>Date <input type="date" id="useDate" required /></label>
-        <label>Eggs used <input type="number" id="useCount" min="0" step="1" required /></label>
-        <label>Purpose <input type="text" id="usePurpose" placeholder="Breakfast, baking, gave away" /></label>
-        <button type="submit">Save Use</button>
-      </form>
-      <div class="table-wrap"><table id="useTable"></table></div>
-    </section>
-
-    <section id="expenses" class="panel">
-      <h2>Feed & Expenses</h2>
-      <form id="expenseForm" class="form-grid">
-        <label>Date <input type="date" id="expenseDate" required /></label>
-        <label>Category
-          <select id="expenseCategory">
-            <option>Feed</option><option>Bedding</option><option>Supplies</option><option>Medicine</option><option>Other</option>
-          </select>
-        </label>
-        <label>Amount <input type="number" id="expenseAmount" min="0" step="0.01" required /></label>
-        <label>Notes <input type="text" id="expenseNotes" /></label>
-        <button type="submit">Save Expense</button>
-      </form>
-      <div class="table-wrap"><table id="expenseTable"></table></div>
-    </section>
-
-    <section id="reports" class="panel">
-      <h2>Backup & Excel Export</h2>
-      <p class="help">Exports download as CSV files. Excel opens CSV files directly.</p>
-      <div class="button-stack">
-        <button id="exportEggs">Export Eggs CSV</button>
-        <button id="exportFlock">Export Flock CSV</button>
-        <button id="exportSales">Export Sales CSV</button>
-        <button id="exportUse">Export Household Use CSV</button>
-        <button id="exportExpenses">Export Expenses CSV</button>
-        <button id="exportAll">Export Full Backup JSON</button>
-        <label class="import-label">Import Backup JSON
-          <input type="file" id="importBackup" accept="application/json" />
-        </label>
-        <button id="clearAll" class="danger">Clear All Data</button>
-      </div>
-    </section>
-  </main>
-
-  <footer>Data is stored locally on this device. Export backups regularly.</footer>
-  <script src="script.js"></script>
-</body>
-</html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>CoopLedger</title><meta name="theme-color" content="#5b3a29"/><link rel="manifest" href="manifest.webmanifest"/><link rel="stylesheet" href="style.css"/></head><body>
+<header><div><h1>CoopLedger</h1><p>Chicken records, synced.</p></div><button id="syncBtn">Sync</button></header>
+<main>
+<section id="setupPanel" class="panel"><h2>Connect Supabase</h2><p class="muted">Enter your Project URL and Publishable Key. Saved only in this browser.</p><label>Supabase URL<input id="supabaseUrl" placeholder="https://your-project.supabase.co"/></label><label>Publishable / anon key<textarea id="supabaseKey" rows="3"></textarea></label><button id="saveConfigBtn">Save Connection</button><p class="warn">Never enter the secret/service_role key.</p></section>
+<section id="authPanel" class="panel hidden"><h2>Sign in</h2><p class="muted">Enter your email. Supabase will send a magic link.</p><label>Email<input id="emailInput" type="email"/></label><button id="signInBtn">Send Sign-In Link</button><p id="authMessage" class="muted"></p></section>
+<section id="appPanel" class="hidden">
+<div class="cards"><article><span>Today</span><b id="todayEggs">0</b><em>eggs</em></article><article><span>7 Days</span><b id="weekEggs">0</b><em>eggs</em></article><article><span>Inventory</span><b id="inventoryEggs">0</b><em>eggs</em></article><article><span>This Month</span><b id="monthSales">$0</b><em>sales</em></article></div>
+<nav><button data-tab="dashboard" class="active">Home</button><button data-tab="eggs">Eggs</button><button data-tab="flock">Flock</button><button data-tab="sales">Sales</button><button data-tab="use">Use</button><button data-tab="expenses">Costs</button><button data-tab="export">Export</button><button data-tab="settings">Settings</button></nav>
+<section id="dashboard" class="panel tab active"><h2>Dashboard</h2><div class="summary"><div><b id="monthEggs">0</b><span>eggs this month</span></div><div><b id="activeLayers">0</b><span>active layers</span></div><div><b id="eggsPerHen">0</b><span>eggs / hen this week</span></div><div><b id="monthExpenses">$0</b><span>expenses this month</span></div></div><h3>Recent Egg Entries</h3><div class="table"><table id="recentEggTable"></table></div></section>
+<section id="eggs" class="panel tab"><h2>Daily Egg Collection</h2><form id="eggForm" class="grid"><label>Date<input type="date" id="eggDate" required/></label><label>Collected<input type="number" id="eggCollected" min="0" required/></label><label>Broken / discarded<input type="number" id="eggBroken" min="0" value="0"/></label><label>Notes<input id="eggNotes"/></label><button>Save Egg Entry</button></form><div class="table"><table id="eggTable"></table></div></section>
+<section id="flock" class="panel tab"><h2>Flock</h2><form id="birdForm" class="grid"><label>Name / ID<input id="birdName" required/></label><label>Breed<input id="birdBreed"/></label><label>Status<select id="birdStatus"><option>Growing</option><option selected>Laying</option><option>Molting</option><option>Broody</option><option>Retired</option><option>Removed</option></select></label><label>Acquired / hatch date<input type="date" id="birdDate"/></label><label>Notes<input id="birdNotes"/></label><button>Add Bird</button></form><div class="table"><table id="birdTable"></table></div></section>
+<section id="sales" class="panel tab"><h2>Sales</h2><form id="saleForm" class="grid"><label>Date<input type="date" id="saleDate" required/></label><label>Customer<input id="saleCustomer"/></label><label>Dozens sold<input type="number" id="saleDozens" min="0" step="0.5" required/></label><label>Price / dozen<input type="number" id="salePrice" min="0" step="0.01" value="5.00"/></label><label>Paid?<select id="salePaid"><option value="true">Yes</option><option value="false">No</option></select></label><label>Notes<input id="saleNotes"/></label><button>Save Sale</button></form><div class="table"><table id="saleTable"></table></div></section>
+<section id="use" class="panel tab"><h2>Household Use / Giveaways</h2><form id="useForm" class="grid"><label>Date<input type="date" id="useDate" required/></label><label>Eggs used<input type="number" id="useEggs" min="0" required/></label><label>Purpose<input id="usePurpose"/></label><button>Save Use</button></form><div class="table"><table id="useTable"></table></div></section>
+<section id="expenses" class="panel tab"><h2>Expenses</h2><form id="expenseForm" class="grid"><label>Date<input type="date" id="expenseDate" required/></label><label>Category<select id="expenseCategory"><option>Feed</option><option>Bedding</option><option>Supplies</option><option>Medicine</option><option>Coop</option><option>Other</option></select></label><label>Amount<input type="number" id="expenseAmount" min="0" step="0.01" required/></label><label>Notes<input id="expenseNotes"/></label><button>Save Expense</button></form><div class="table"><table id="expenseTable"></table></div></section>
+<section id="export" class="panel tab"><h2>Export / Import</h2><div class="actions"><button id="exportEggs">Export Eggs CSV</button><button id="exportFlock">Export Flock CSV</button><button id="exportSales">Export Sales CSV</button><button id="exportUse">Export Use CSV</button><button id="exportExpenses">Export Expenses CSV</button><button id="exportBackup">Export Full JSON Backup</button><label class="fileBtn">Import JSON Backup<input id="importBackup" type="file" accept="application/json"/></label></div></section>
+<section id="settings" class="panel tab"><h2>Settings</h2><p id="signedInAs" class="muted"></p><button id="signOutBtn">Sign Out</button><button id="resetConfigBtn" class="danger">Reset Supabase Connection</button></section>
+</section></main><footer id="status">Not connected.</footer><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="script.js"></script></body></html>

@@ -1,59 +1,15 @@
-const KEY="chickenTrackerFullV1";
-const $=id=>document.getElementById(id);
-const today=()=>new Date().toISOString().slice(0,10);
-let deferredPrompt;
-
-const blank={eggs:[],birds:[],sales:[],uses:[],expenses:[]};
-let db=load();
-
-function load(){try{return {...blank,...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch{return {...blank}}}
-function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
-function money(n){return Number(n||0).toLocaleString(undefined,{style:"currency",currency:"USD"})}
-function num(n){return Number(n||0)}
-function csvEscape(v){return `"${String(v??"").replaceAll('"','""')}"`}
-function download(filename,content,type="text/csv"){const blob=new Blob([content],{type});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=filename;a.click();URL.revokeObjectURL(a.href)}
-function toCSV(rows,headers){return headers.join(",")+"\n"+rows.map(r=>headers.map(h=>csvEscape(r[h])).join(",")).join("\n")}
-function addRow(collection,item){db[collection].push({...item,id:crypto.randomUUID?.()||String(Date.now()+Math.random())});save()}
-function removeRow(collection,id){if(confirm("Delete this entry?")){db[collection]=db[collection].filter(x=>x.id!==id);save()}}
-
-function setDefaultDates(){["eggDate","saleDate","useDate","expenseDate"].forEach(id=>$(id).value=today())}
-setDefaultDates();
-$("todayLine").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric",year:"numeric"});
-
-document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button,.panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$(b.dataset.tab).classList.add("active")});
-
-$("eggForm").onsubmit=e=>{e.preventDefault();addRow("eggs",{Date:$("eggDate").value,"Eggs Collected":num($("eggCount").value),"Broken/Discarded":num($("eggBad").value),Notes:$("eggNotes").value});e.target.reset();setDefaultDates()};
-$("birdForm").onsubmit=e=>{e.preventDefault();addRow("birds",{"Name/ID":$("birdName").value,Breed:$("birdBreed").value,Status:$("birdStatus").value,"Hatch/Acquired Date":$("birdDate").value,Notes:$("birdNotes").value});e.target.reset()};
-$("saleForm").onsubmit=e=>{e.preventDefault();const dozens=num($("saleDozens").value), price=num($("salePrice").value);addRow("sales",{Date:$("saleDate").value,Customer:$("saleCustomer").value,"Dozens Sold":dozens,"Price/Dozen":price,Total:(dozens*price).toFixed(2),Paid:$("salePaid").value,Notes:$("saleNotes").value});e.target.reset();$("salePrice").value="5.00";setDefaultDates()};
-$("useForm").onsubmit=e=>{e.preventDefault();addRow("uses",{Date:$("useDate").value,"Eggs Used":num($("useCount").value),Purpose:$("usePurpose").value});e.target.reset();setDefaultDates()};
-$("expenseForm").onsubmit=e=>{e.preventDefault();addRow("expenses",{Date:$("expenseDate").value,Category:$("expenseCategory").value,Amount:num($("expenseAmount").value).toFixed(2),Notes:$("expenseNotes").value});e.target.reset();setDefaultDates()};
-
-function table(id,rows,headers,collection){$(id).innerHTML="<tr>"+headers.map(h=>`<th>${h}</th>`).join("")+"<th></th></tr>"+rows.slice().reverse().map(r=>"<tr>"+headers.map(h=>`<td>${r[h]??""}</td>`).join("")+`<td class="row-actions"><button onclick="removeRow('${collection}','${r.id}')">Delete</button></td></tr>`).join("")}
-function renderAll(){
-  const d=today();
-  $("eggsToday").textContent=db.eggs.filter(x=>x.Date===d).reduce((a,x)=>a+num(x["Eggs Collected"]),0);
-  const seven=new Date(); seven.setDate(seven.getDate()-6); const sevenStr=seven.toISOString().slice(0,10);
-  $("eggs7").textContent=db.eggs.filter(x=>x.Date>=sevenStr).reduce((a,x)=>a+num(x["Eggs Collected"]),0);
-  $("activeHens").textContent=db.birds.filter(x=>["Active layer","Too young","Broody"].includes(x.Status)).length;
-  const ym=d.slice(0,7); $("salesMonth").textContent=money(db.sales.filter(x=>x.Date?.startsWith(ym)).reduce((a,x)=>a+num(x.Total),0));
-  table("eggTable",db.eggs,["Date","Eggs Collected","Broken/Discarded","Notes"],"eggs");
-  table("birdTable",db.birds,["Name/ID","Breed","Status","Hatch/Acquired Date","Notes"],"birds");
-  table("saleTable",db.sales,["Date","Customer","Dozens Sold","Price/Dozen","Total","Paid","Notes"],"sales");
-  table("useTable",db.uses,["Date","Eggs Used","Purpose"],"uses");
-  table("expenseTable",db.expenses,["Date","Category","Amount","Notes"],"expenses");
-}
-renderAll();
-
-$("exportEggs").onclick=()=>download("chicken-eggs.csv",toCSV(db.eggs,["Date","Eggs Collected","Broken/Discarded","Notes"]));
-$("exportFlock").onclick=()=>download("chicken-flock.csv",toCSV(db.birds,["Name/ID","Breed","Status","Hatch/Acquired Date","Notes"]));
-$("exportSales").onclick=()=>download("chicken-sales.csv",toCSV(db.sales,["Date","Customer","Dozens Sold","Price/Dozen","Total","Paid","Notes"]));
-$("exportUse").onclick=()=>download("chicken-household-use.csv",toCSV(db.uses,["Date","Eggs Used","Purpose"]));
-$("exportExpenses").onclick=()=>download("chicken-expenses.csv",toCSV(db.expenses,["Date","Category","Amount","Notes"]));
-$("exportAll").onclick=()=>download("chicken-tracker-backup.json",JSON.stringify(db,null,2),"application/json");
-$("importBackup").onchange=e=>{const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{try{db={...blank,...JSON.parse(r.result)}; save(); alert("Backup imported.")}catch{alert("That backup file could not be read.")}}; r.readAsText(f)};
-$("clearAll").onclick=()=>{if(confirm("This deletes all Chicken Tracker data on this device. Export a backup first. Continue?")){db={...blank};save()}};
-
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;$("installBtn").classList.remove("hidden")});
-$("installBtn").onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null;$("installBtn").classList.add("hidden")}};
-
-if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
+const CONFIG_KEY="coopledger_supabase_config_v1",$=id=>document.getElementById(id);let client=null,session=null,data={eggs:[],birds:[],sales:[],uses:[],expenses:[]};const today=()=>new Date().toISOString().slice(0,10),money=n=>Number(n||0).toLocaleString(undefined,{style:"currency",currency:"USD"}),num=v=>Number(v||0),setStatus=t=>$("status").textContent=t;
+function cfg(){try{return JSON.parse(localStorage.getItem(CONFIG_KEY)||"null")}catch{return null}}function saveCfg(url,key){localStorage.setItem(CONFIG_KEY,JSON.stringify({url:url.trim(),key:key.trim()}))}function show(id){["setupPanel","authPanel","appPanel"].forEach(x=>$(x).classList.add("hidden"));$(id).classList.remove("hidden")}function dates(){["eggDate","saleDate","useDate","expenseDate"].forEach(id=>{if($(id))$(id).value=today()})}
+async function init(){dates();const c=cfg();if(!c){show("setupPanel");return}$("supabaseUrl").value=c.url;$("supabaseKey").value=c.key;try{client=window.supabase.createClient(c.url,c.key);let r=await client.auth.getSession();session=r.data.session;client.auth.onAuthStateChange((_e,s)=>{session=s;route()});route()}catch(e){show("setupPanel");setStatus("Connection error.")}}
+async function route(){if(!session){show("authPanel");setStatus("Connected. Sign in required.");return}$("signedInAs").textContent="Signed in as "+(session.user?.email||"your account");show("appPanel");await loadAll()}
+$("saveConfigBtn").onclick=()=>{saveCfg($("supabaseUrl").value,$("supabaseKey").value);location.reload()};$("signInBtn").onclick=async()=>{let email=$("emailInput").value.trim();if(!email){$("authMessage").textContent="Enter your email first.";return}let {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:location.href.split("#")[0]}});$("authMessage").textContent=error?error.message:"Check your email for the sign-in link."};$("signOutBtn").onclick=async()=>{await client.auth.signOut();session=null;route()};$("resetConfigBtn").onclick=()=>{if(confirm("Reset connection settings?")){localStorage.removeItem(CONFIG_KEY);location.reload()}};$("syncBtn").onclick=()=>loadAll();
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button,.tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");$(b.dataset.tab).classList.add("active")});
+async function loadAll(){setStatus("Syncing...");const [eggs,birds,sales,uses,expenses]=await Promise.all([client.from("egg_entries").select("*").order("entry_date",{ascending:false}),client.from("flock").select("*").order("created_at",{ascending:false}),client.from("sales").select("*").order("sale_date",{ascending:false}),client.from("household_use").select("*").order("use_date",{ascending:false}),client.from("expenses").select("*").order("expense_date",{ascending:false})]);let err=[eggs,birds,sales,uses,expenses].find(r=>r.error);if(err){setStatus("Sync failed: "+err.error.message);return}data={eggs:eggs.data,birds:birds.data,sales:sales.data,uses:uses.data,expenses:expenses.data};render();setStatus("Synced "+new Date().toLocaleTimeString())}
+async function insert(table,row){setStatus("Saving...");let {error}=await client.from(table).insert(row);if(error){alert(error.message);setStatus("Save failed")}else await loadAll()}async function del(table,id){if(!confirm("Delete this record?"))return;let {error}=await client.from(table).delete().eq("id",id);if(error)alert(error.message);else await loadAll()}
+$("eggForm").onsubmit=e=>{e.preventDefault();insert("egg_entries",{entry_date:$("eggDate").value,eggs_collected:num($("eggCollected").value),broken_discarded:num($("eggBroken").value),notes:$("eggNotes").value});e.target.reset();dates()};$("birdForm").onsubmit=e=>{e.preventDefault();insert("flock",{name:$("birdName").value,breed:$("birdBreed").value,status:$("birdStatus").value,acquired_date:$("birdDate").value||null,notes:$("birdNotes").value});e.target.reset()};$("saleForm").onsubmit=e=>{e.preventDefault();insert("sales",{sale_date:$("saleDate").value,customer:$("saleCustomer").value,dozens:num($("saleDozens").value),price_per_dozen:num($("salePrice").value),paid:$("salePaid").value==="true",notes:$("saleNotes").value});e.target.reset();$("salePrice").value="5.00";dates()};$("useForm").onsubmit=e=>{e.preventDefault();insert("household_use",{use_date:$("useDate").value,eggs_used:num($("useEggs").value),purpose:$("usePurpose").value});e.target.reset();dates()};$("expenseForm").onsubmit=e=>{e.preventDefault();insert("expenses",{expense_date:$("expenseDate").value,category:$("expenseCategory").value,amount:num($("expenseAmount").value),notes:$("expenseNotes").value});e.target.reset();dates()};
+function table(id,rows,headers,map,tableName){$(id).innerHTML="<tr>"+headers.map(h=>`<th>${h}</th>`).join("")+"<th></th></tr>"+rows.map(r=>"<tr>"+map(r).map(v=>`<td>${v??""}</td>`).join("")+`<td><button onclick="del('${tableName}','${r.id}')">Delete</button></td></tr>`).join("")}
+function render(){let d=today(),ym=d.slice(0,7),w=new Date();w.setDate(w.getDate()-6);let ws=w.toISOString().slice(0,10),col=data.eggs.reduce((a,x)=>a+num(x.eggs_collected),0),bad=data.eggs.reduce((a,x)=>a+num(x.broken_discarded),0),sold=data.sales.reduce((a,x)=>a+num(x.dozens)*12,0),used=data.uses.reduce((a,x)=>a+num(x.eggs_used),0),active=data.birds.filter(x=>["Laying","Molting","Broody"].includes(x.status)).length,week=data.eggs.filter(x=>x.entry_date>=ws).reduce((a,x)=>a+num(x.eggs_collected),0);$("todayEggs").textContent=data.eggs.filter(x=>x.entry_date===d).reduce((a,x)=>a+num(x.eggs_collected),0);$("weekEggs").textContent=week;$("inventoryEggs").textContent=Math.round(col-bad-sold-used);$("monthSales").textContent=money(data.sales.filter(x=>x.sale_date?.startsWith(ym)).reduce((a,x)=>a+num(x.dozens)*num(x.price_per_dozen),0));$("monthEggs").textContent=data.eggs.filter(x=>x.entry_date?.startsWith(ym)).reduce((a,x)=>a+num(x.eggs_collected),0);$("activeLayers").textContent=active;$("eggsPerHen").textContent=active?(week/active).toFixed(1):"0";$("monthExpenses").textContent=money(data.expenses.filter(x=>x.expense_date?.startsWith(ym)).reduce((a,x)=>a+num(x.amount),0));table("recentEggTable",data.eggs.slice(0,10),["Date","Collected","Broken","Notes"],r=>[r.entry_date,r.eggs_collected,r.broken_discarded,r.notes],"egg_entries");table("eggTable",data.eggs,["Date","Collected","Broken","Notes"],r=>[r.entry_date,r.eggs_collected,r.broken_discarded,r.notes],"egg_entries");table("birdTable",data.birds,["Name","Breed","Status","Date","Notes"],r=>[r.name,r.breed,r.status,r.acquired_date,r.notes],"flock");table("saleTable",data.sales,["Date","Customer","Dozens","Price","Total","Paid","Notes"],r=>[r.sale_date,r.customer,r.dozens,money(r.price_per_dozen),money(num(r.dozens)*num(r.price_per_dozen)),r.paid?"Yes":"No",r.notes],"sales");table("useTable",data.uses,["Date","Eggs","Purpose"],r=>[r.use_date,r.eggs_used,r.purpose],"household_use");table("expenseTable",data.expenses,["Date","Category","Amount","Notes"],r=>[r.expense_date,r.category,money(r.amount),r.notes],"expenses")}
+function esc(v){return `"${String(v??"").replaceAll('"','""')}"`}function csv(rows,headers,map){return headers.join(",")+"\n"+rows.map(r=>map(r).map(esc).join(",")).join("\n")}function dl(name,content,type="text/csv"){let a=document.createElement("a"),blob=new Blob([content],{type});a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
+$("exportEggs").onclick=()=>dl("coopledger-eggs.csv",csv(data.eggs,["date","eggs_collected","broken_discarded","notes"],r=>[r.entry_date,r.eggs_collected,r.broken_discarded,r.notes]));$("exportFlock").onclick=()=>dl("coopledger-flock.csv",csv(data.birds,["name","breed","status","date","notes"],r=>[r.name,r.breed,r.status,r.acquired_date,r.notes]));$("exportSales").onclick=()=>dl("coopledger-sales.csv",csv(data.sales,["date","customer","dozens","price_per_dozen","paid","notes"],r=>[r.sale_date,r.customer,r.dozens,r.price_per_dozen,r.paid,r.notes]));$("exportUse").onclick=()=>dl("coopledger-use.csv",csv(data.uses,["date","eggs_used","purpose"],r=>[r.use_date,r.eggs_used,r.purpose]));$("exportExpenses").onclick=()=>dl("coopledger-expenses.csv",csv(data.expenses,["date","category","amount","notes"],r=>[r.expense_date,r.category,r.amount,r.notes]));$("exportBackup").onclick=()=>dl("coopledger-backup.json",JSON.stringify(data,null,2),"application/json");
+$("importBackup").onchange=e=>{alert("Backup import is reserved for our next step after first sync test.")};
+if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}init();
