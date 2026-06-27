@@ -37,10 +37,13 @@
 <article><span>This Month</span><b id="monthSales">$0</b><em>sales</em></article>
 </div>
 <nav>
-<button data-tab="dashboard" class="active">Home</button><button data-tab="eggs">Eggs</button><button data-tab="flock">Flock</button><button data-tab="sales">Sales</button><button data-tab="use">Use</button><button data-tab="expenses">Costs</button><button data-tab="import">Import</button><button data-tab="export">Export</button><button data-tab="settings">Settings</button>
+<button data-tab="dashboard" class="active">Home</button><button data-tab="reports">Reports</button><button data-tab="eggs">Eggs</button><button data-tab="flock">Flock</button><button data-tab="sales">Sales</button><button data-tab="use">Use</button><button data-tab="expenses">Costs</button><button data-tab="import">Import</button><button data-tab="export">Export</button><button data-tab="settings">Settings</button>
 </nav>
 
 <section id="dashboard" class="panel tab active"><h2>Dashboard</h2><div class="summary"><div><b id="monthEggs">0</b><span>eggs this month</span></div><div><b id="activeLayers">0</b><span>active layers</span></div><div><b id="eggsPerHen">0</b><span>eggs / hen this week</span></div><div><b id="monthExpenses">$0</b><span>expenses this month</span></div></div><h3>Recent Egg Entries</h3><div class="table"><table id="recentEggTable"></table></div></section>
+
+
+<section id="reports" class="panel tab"><h2>Egg Reports</h2><p class="muted">Mobile-friendly production charts based on your egg history.</p><div class="reportCards"><article><span>Week to date</span><b id="reportWtd">0</b><em>eggs</em></article><article><span>Last week</span><b id="reportLastWeek">0</b><em>eggs</em></article><article><span>Month to date</span><b id="reportMtd">0</b><em>eggs</em></article><article><span>Last month</span><b id="reportLastMonth">0</b><em>eggs</em></article></div><div class="reportControls"><button id="reportDailyBtn" class="active" type="button">Daily</button><button id="reportWeeklyBtn" type="button">Weekly</button><button id="reportMonthlyBtn" type="button">Monthly</button></div><div class="chartCard"><div class="chartHeader"><div><h3 id="reportChartTitle">Daily Egg Production</h3><p id="reportChartSub" class="muted">Last 30 days</p></div><b id="reportChartTotal">0 eggs</b></div><div id="eggChart" class="barChart"></div></div><div class="reportStats"><div><b id="reportBestWeek">0</b><span>best week</span></div><div><b id="reportBestMonth">0</b><span>best month</span></div><div><b id="reportAvgDay">0</b><span>avg / day</span></div><div><b id="reportLifetime">0</b><span>lifetime eggs</span></div></div></section>
 
 <section id="eggs" class="panel tab"><h2>Daily Egg Collection</h2><form id="eggForm" class="grid"><label>Date<input type="date" id="eggDate" required/></label><label>Collected<input type="number" id="eggCollected" min="0" required/></label><label>Broken / discarded<input type="number" id="eggBroken" min="0" value="0"/></label><label>Notes<input id="eggNotes"/></label><button>Save Egg Entry</button></form><div class="table"><table id="eggTable"></table></div></section>
 
@@ -60,6 +63,6 @@
 </section></main>
 <footer id="status">Not connected.</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=6"></script>
-<script src="script.js?v=6"></script>
+<script src="config.js?v=7"></script>
+<script src="script.js?v=7"></script>
 </body></html>
