@@ -31,16 +31,16 @@
 
 <section id="appPanel" class="hidden">
 <div class="cards">
-<article><span id="todayEggsLabel">Today</span><b id="todayEggs">0</b><em>eggs</em></article>
-<article><span id="weekEggsLabel">Week to Date</span><b id="weekEggs">0</b><em>eggs</em></article>
-<article><span>Total Eggs</span><b id="inventoryEggs">0</b><em>collected</em></article>
+<article><span>Today</span><b id="todayEggs">0</b><em>eggs</em></article>
+<article><span>7 Days</span><b id="weekEggs">0</b><em>eggs</em></article>
+<article><span>Inventory</span><b id="inventoryEggs">0</b><em>eggs</em></article>
 <article><span>This Month</span><b id="monthSales">$0</b><em>sales</em></article>
 </div>
 <nav>
 <button data-tab="dashboard" class="active">Home</button><button data-tab="reports">Reports</button><button data-tab="eggs">Eggs</button><button data-tab="flock">Flock</button><button data-tab="sales">Sales</button><button data-tab="use">Use</button><button data-tab="expenses">Costs</button><button data-tab="import">Import</button><button data-tab="export">Export</button><button data-tab="settings">Settings</button>
 </nav>
 
-<section id="dashboard" class="panel tab active"><h2>Dashboard</h2><div class="summary"><div><b id="monthEggs">0</b><span>eggs this month</span></div><div><b id="activeLayers">0</b><span>active layers</span></div><div><b id="eggsPerHen">0</b><span>eggs / hen this week</span></div><div><b id="monthExpenses">$0</b><span>expenses this month</span></div></div><h3>Recent Egg Entries</h3><div class="table"><table id="recentEggTable"></table></div></section>
+<section id="dashboard" class="panel tab active"><h2>Dashboard</h2><div class="summary"><div><b id="monthEggs">0</b><span>eggs this month</span></div><div><b id="activeLayers">0</b><span>active layers</span></div><div><b id="eggsPerHen">0</b><span>eggs / hen this week</span></div><div><b id="monthExpenses">$0</b><span>expenses this month</span></div></div><div class="dashboardGrid"><div class="chartCard"><div class="chartHeader"><div><h3>Last 14 Days</h3><p class="muted">Tap a bar for details.</p></div><b id="dash14Total">0 eggs</b></div><div id="dashboardChart" class="barChart compactChart"></div><p id="dashboardChartDetail" class="chartDetail muted">Select a day to see details.</p></div><div class="insightCard"><h3>Quick Insights</h3><div class="insightList"><div><span>7-day average</span><b id="dash7Avg">0</b></div><div><span>Month pace</span><b id="dashMonthPace">0</b></div><div><span>Best day</span><b id="dashBestDay">0</b></div><div><span>Last entry</span><b id="dashLastEntry">None</b></div></div></div></div><h3>Recent Egg Entries</h3><div class="table"><table id="recentEggTable"></table></div></section>
 
 
 <section id="reports" class="panel tab"><h2>Egg Reports</h2><p class="muted">Mobile-friendly production charts based on your egg history.</p><div class="reportCards"><article><span>Week to date</span><b id="reportWtd">0</b><em>eggs</em></article><article><span>Last week</span><b id="reportLastWeek">0</b><em>eggs</em></article><article><span>Month to date</span><b id="reportMtd">0</b><em>eggs</em></article><article><span>Last month</span><b id="reportLastMonth">0</b><em>eggs</em></article></div><div class="reportControls"><button id="reportDailyBtn" class="active" type="button">Daily</button><button id="reportWeeklyBtn" type="button">Weekly</button><button id="reportMonthlyBtn" type="button">Monthly</button></div><div class="chartCard"><div class="chartHeader"><div><h3 id="reportChartTitle">Daily Egg Production</h3><p id="reportChartSub" class="muted">Last 30 days</p></div><b id="reportChartTotal">0 eggs</b></div><div id="eggChart" class="barChart"></div></div><div class="reportStats"><div><b id="reportBestWeek">0</b><span>best week</span></div><div><b id="reportBestMonth">0</b><span>best month</span></div><div><b id="reportAvgDay">0</b><span>avg / day</span></div><div><b id="reportLifetime">0</b><span>lifetime eggs</span></div></div></section>
