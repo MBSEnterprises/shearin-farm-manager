@@ -26,6 +26,33 @@ function addDays(dt,n){let d=dateOnly(dt);d.setDate(d.getDate()+n);return d}
 function addMonths(dt,n){let d=new Date(dt.getFullYear(),dt.getMonth()+n,1);return d}
 function startOfWeek(dt){let d=dateOnly(dt),day=d.getDay();d.setDate(d.getDate()-day);return d}
 function monthKey(dt){return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")}
+
+function recordDate(value){
+  if(!value) return "";
+  if(value instanceof Date) return isoDate(value);
+  let raw=String(value).trim();
+  let m=raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(m) return m[1]+"-"+m[2]+"-"+m[3];
+  let d=new Date(raw);
+  if(!isNaN(d)) return isoDate(d);
+  return "";
+}
+function recordMonth(value){
+  let d=recordDate(value);
+  return d ? d.slice(0,7) : "";
+}
+function relativeDayText(iso){
+  let d=recordDate(iso);
+  if(!d) return "unknown";
+  let a=new Date(d+"T00:00:00"), b=dateOnly(new Date());
+  let days=Math.round((b-a)/86400000);
+  if(days===0) return "today";
+  if(days===1) return "yesterday";
+  if(days>1) return days+" days ago";
+  if(days===-1) return "tomorrow";
+  return prettyDayLong(d);
+}
+
 function prettyDay(iso){let [y,m,d]=iso.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString(undefined,{month:"short",day:"numeric"})}
 function prettyDayLong(iso){let [y,m,d]=iso.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}
 function dateRangeText(startIso,endIso){return startIso===endIso?prettyDayLong(startIso):prettyDay(startIso)+"–"+prettyDayLong(endIso)}
@@ -54,7 +81,7 @@ function registerAutoUpdateServiceWorker(){
   });
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("sw.js?v=12", { updateViaCache: "none" });
+      const reg = await navigator.serviceWorker.register("sw.js?v=18", { updateViaCache: "none" });
       await reg.update();
       if (reg.waiting) reg.waiting.postMessage({ type: "SKIP_WAITING" });
       reg.addEventListener("updatefound", () => {
