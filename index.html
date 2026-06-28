@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Shearin Farm Manager</title>
 <meta name="theme-color" content="#5b3a29"/>
-<link rel="manifest" href="manifest.webmanifest?v=19"/>
-<link rel="stylesheet" href="style.css?v=19"/>
+<link rel="manifest" href="manifest.webmanifest?v=20"/>
+<link rel="stylesheet" href="style.css?v=20"/>
 </head>
 <body>
 <header><div><h1>Shearin Farm Manager</h1><p>Flock records, synced.</p></div><button id="syncBtn">Sync</button></header>
@@ -22,10 +22,10 @@
 
 <section id="authPanel" class="panel hidden">
 <h2>Sign in</h2>
-<p class="muted">Use email and password. Your farm database is already connected.</p>
+<p class="muted">Use email and password. New accounts will receive a verification email that returns to this app.</p>
 <label>Email<input id="emailInput" type="email" autocomplete="email"/></label>
-<label>Password<input id="passwordInput" type="password" autocomplete="current-password"/></label>
-<div class="authButtons"><button id="signInBtn">Sign In</button><button id="signUpBtn" type="button">Create Account</button></div>
+<label>Password<input id="passwordInput" type="password" autocomplete="current-password" minlength="6"/></label>
+<div class="authButtons"><button id="signInBtn">Sign In</button><button id="signUpBtn" type="button">Create Account</button><button id="resendVerifyBtn" type="button">Resend Verification Email</button><button id="forgotPasswordBtn" type="button">Forgot Password</button></div>
 <p id="authMessage" class="muted"></p>
 </section>
 
@@ -62,10 +62,10 @@
 
 <section id="export" class="panel tab"><h2>Export</h2><div class="actions"><button id="exportEggs">Export Eggs CSV</button><button id="exportFlock">Export Flock CSV</button><button id="exportSales">Export Sales CSV</button><button id="exportUse">Export Use CSV</button><button id="exportOnHand">Export Eggs on Hand CSV</button><button id="exportExpenses">Export Expenses CSV</button><button id="exportBackup">Export Full JSON Backup</button></div></section>
 
-<section id="settings" class="panel tab"><h2>Settings</h2><p id="signedInAs" class="muted"></p><button id="signOutBtn">Sign Out</button><button id="resetConfigBtn" class="danger">Reset Supabase Connection</button></section>
+<section id="settings" class="panel tab"><h2>Settings</h2><p id="signedInAs" class="muted"></p><button id="signOutBtn">Sign Out</button><button id="resetConfigBtn" class="danger">Reset Supabase Connection</button><h3>Diagnostics</h3><p class="muted">Use this when account setup or syncing misbehaves.</p><div class="diagnostics"><div><b>App version</b><span id="diagAppVersion">loading</span></div><div><b>App URL</b><span id="diagAppUrl">loading</span></div><div><b>Auth redirect URL</b><span id="diagRedirectUrl">loading</span></div><div><b>Supabase URL</b><span id="diagSupabaseUrl">loading</span></div><div><b>Auth status</b><span id="diagAuthStatus">loading</span></div></div></section>
 </section></main>
 <footer id="status">Not connected.</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=19"></script>
-<script src="script.js?v=19"></script>
+<script src="config.js?v=20"></script>
+<script src="script.js?v=20"></script>
 </body></html>
